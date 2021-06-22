@@ -1,0 +1,82 @@
+#page {
+    display: flex;
+    column-gap: no;
+    /*border: 3px solid grey;*/
+}
+
+#left_col {
+    display: grid;
+    /*border: 3px solid red;*/
+    margin: 0px;
+    width: 40%;
+}
+
+#right_col {
+    width: 60%;
+    margin: 0px;
+    display: grid;
+    /*border: 3px solid blue;*/
+}
+
+#button_parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  padding-right: 100px;
+  gap: 10px;
+  /*border: 3px solid green;*/
+}
+
+#start_stop {
+    font-size: 15px;
+    width: 30%;
+    height: 100px;
+}
+
+#set {
+    font-size: 15px;
+    width: 30%;
+    height: 100px;
+}
+
+#graph_parent {
+    margin-top: 10px;
+    padding-top: 10px;
+    /* border: 3px solid yellow; */
+}
+
+#graph2_parent {
+    margin-top: 10px;
+    padding-top: 10px;
+    /* border: 3px solid yellow; */
+}
+/*
+#input_T_parent {
+    font-size: 15px;
+    text-align: center;
+    font-size: 15px
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row: 1;
+    padding-top: 150px;
+}
+
+#input_T {
+    width: 100%;
+}
+
+#input_dir1_parent {
+    font-size: 15px;
+    text-align: center;
+    font-size: 15px
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row: 2;
+    display: grid;
+}
+*/
+#box {
+    grid-column: 3;
+}
+
