@@ -62,25 +62,43 @@ app.layout = html.Div(id="page", children=[
             children=[html.Div(id='graph2_parent', children=[
                       dcc.Graph(figure=fig2, id='live-graph2')]),
                       html.Div(id="input_parent", children=[
-                          html.Label("System size", id='size_label', style={'font-size': '20px'}),
+                          html.Label("N = ", id='size_label', style={'font-size': '20px'}),
                           dcc.Input(
                               id="size", type="number", placeholder=25, value=25,
                               min=5, max=1000, step=1,
                           ),
-                        dcc.RadioItems(
+                          dcc.RadioItems(
                             id='model',
                             options=[
                                 {'label': 'conformity + independence', 'value': 'c_i'},
                                 {'label': 'conformity + anticonformity', 'value': 'c_a'},
                             ],
                             value='c_i',
-                        ),
-                      html.Label("q (impact group size)", id='q_label', style={'font-size': '20px'}),
+                           ),
+                           dcc.RadioItems(
+                            id='draw',
+                            options=[
+                                {'label': 'drawing with repetitions⠀⠀', 'value': 'with'},
+                                {'label': 'drawing without repetitions', 'value': 'without'},
+                            ],
+                            value='with',
+                           ),
+                      html.Label("q = ", id='q_label', style={'font-size': '20px'}),
                       dcc.Input(
                               id="q", type="number", placeholder=3, value=3,
                               min=1, max=4, step=1,
                           ),
-                      html.Label("___", id='bottom_label', style={'font-size': '20px'}),
+                      html.Label("p = ", id='p_label', style={'font-size': '20px'}),
+                      dcc.Input(
+                              id="p", type="number", placeholder=0.5, value=0.5,
+                              min=0.01, max=1, step=0.01,
+                          ),
+                      html.Label("f = ", id='f_label', style={'font-size': '20px'}),
+                      dcc.Input(
+                              id="f", type="number", placeholder=0.5, value=0.5,
+                              min=0.01, max=1, step=0.01,
+                          ),
+                      html.Label(" ", id='bottom_label', style={'font-size': '20px'}),
                       ])
                      ]
                     )
