@@ -11,7 +11,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets, update_titl
 server = app.server
 
 n = 25
-speed = 50
+speed = 100
 start_data = np.random.choice([-1, 1], size=(n, n))
 
 fig = go.Figure()
