@@ -1,21 +1,21 @@
 #page {
     display: flex;
     column-gap: no;
-    /*border: 3px solid grey;*/
+    margin: 50px;
 }
 
 #left_col {
     display: grid;
-    /*border: 3px solid red;*/
+    border: 3px solid #ededeb;
     margin: 0px;
-    width: 40%;
+    width: 45%;
 }
 
 #right_col {
-    width: 60%;
+    width: 55%;
     margin: 0px;
     display: grid;
-    /*border: 3px solid blue;*/
+    border: 3px solid #ededeb;
 }
 
 #button_parent {
@@ -24,8 +24,7 @@
   align-items: center;
   height: 100px;
   padding-right: 100px;
-  gap: 10px;
-  /*border: 3px solid green;*/
+  border: 3px solid #ededeb;
 }
 
 #start_stop {
@@ -43,25 +42,78 @@
 #graph_parent {
     margin-top: 10px;
     padding-top: 10px;
-    /* border: 3px solid yellow; */
+    border: 3px solid #ededeb;
 }
 
 #graph2_parent {
     margin-top: 10px;
     padding-top: 10px;
-    /* border: 3px solid yellow; */
-}
-/*
-#input_T_parent {
-    font-size: 15px;
-    text-align: center;
-    font-size: 15px
+    grid-row: 1;
     grid-column-start: 1;
     grid-column-end: 2;
-    grid-row: 1;
-    padding-top: 150px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
 }
 
+#input_parent {
+    font-size: 15px;
+    text-align: center;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 10;
+    display: grid;
+    row-gap: 0px;
+}
+
+#size_label {
+    grid-column: 1;
+    grid-row: 1;
+    border: 3px solid #ededeb;
+    width: 50%;
+    margin: 0 auto;
+
+}
+
+#size {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: center;
+    width: 50%;
+    margin: 0 auto;
+}
+
+#model {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 0 auto;
+    font-size: 18px;
+}
+
+#q_label {
+    grid-column: 2;
+    grid-row: 1;
+    border: 3px solid #ededeb;
+    width: 50%;
+    margin: 0 auto;
+}
+
+#q {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: center;
+    width: 50%;
+    margin: 0 auto;
+}
+
+#bottom_label {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 4;
+    grid-row-end: 9;
+    border: 3px solid red;
+}
+/*
 #input_T {
     width: 100%;
 }
@@ -76,7 +128,4 @@
     display: grid;
 }
 */
-#box {
-    grid-column: 3;
-}
 

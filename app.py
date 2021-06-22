@@ -21,7 +21,7 @@ fig.add_trace(go.Heatmap(z=np.random.choice([-1, 1], (n, n)),
                                      [1, "rgb(103, 230, 114)"]]))
 
 fig.update_layout(
-                  showlegend=False, autosize=False, width=800, height=800,
+                  showlegend=False, autosize=False, width=700, height=700,
                   title={
                             'text': "q-voter model simulation",
                             'y': 0.95,
@@ -60,7 +60,28 @@ app.layout = html.Div(id="page", children=[
         html.Div(
             id='right_col',
             children=[html.Div(id='graph2_parent', children=[
-                      dcc.Graph(figure=fig2, id='live-graph2')])
+                      dcc.Graph(figure=fig2, id='live-graph2')]),
+                      html.Div(id="input_parent", children=[
+                          html.Label("System size", id='size_label', style={'font-size': '20px'}),
+                          dcc.Input(
+                              id="size", type="number", placeholder=25, value=25,
+                              min=5, max=1000, step=1,
+                          ),
+                        dcc.RadioItems(
+                            id='model',
+                            options=[
+                                {'label': 'conformity + independence', 'value': 'c_i'},
+                                {'label': 'conformity + anticonformity', 'value': 'c_a'},
+                            ],
+                            value='c_i',
+                        ),
+                      html.Label("q (impact group size)", id='q_label', style={'font-size': '20px'}),
+                      dcc.Input(
+                              id="q", type="number", placeholder=3, value=3,
+                              min=1, max=4, step=1,
+                          ),
+                      html.Label("___", id='bottom_label', style={'font-size': '20px'}),
+                      ])
                      ]
                     )
             ]
