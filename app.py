@@ -32,9 +32,9 @@ fig.update_layout(
                   )
 
 fig2 = go.Figure()
-fig2.add_trace(go.Scatter(x=[0], y=[np.sum((start_data == 1))], line=dict(color="rgb(103, 230, 114)", width=2)))
+fig2.add_trace(go.Scatter(x=[0], y=[np.sum(start_data)/(n*n)], name='Average opinion', line=dict(color="rgb(103, 230, 114)", width=2)))
 fig2.update_layout(
-                  showlegend=False, autosize=False, width=900, height=400,
+                  autosize=False, width=900, height=400,  xaxis_title="time",
                   title={
                             'text': " ",
                             'y': 0.95,
@@ -62,9 +62,9 @@ app.layout = html.Div(id="page", children=[
             children=[html.Div(id='graph2_parent', children=[
                       dcc.Graph(figure=fig2, id='live-graph2')]),
                       html.Div(id="input_parent", children=[
-                          html.Label("N = ", id='size_label', style={'font-size': '20px'}),
+                          html.Label("N = ", id='n_label', style={'font-size': '20px'}),
                           dcc.Input(
-                              id="size", type="number", placeholder=25, value=25,
+                              id="n", type="number", placeholder=25, value=25,
                               min=5, max=1000, step=1,
                           ),
                           dcc.RadioItems(
@@ -112,24 +112,24 @@ app.layout = html.Div(id="page", children=[
               Input('interval', 'n_intervals'),
               Input('live-graph2', 'figure'),
               Input('set', 'n_clicks'),
-              State('data', 'data'))
-def update_data(n_intervals,  figure, set_click, data):
+              State('data', 'data'),
+              State('n', 'value'),
+              State('q', 'value'),
+              State('p', 'value'),
+              State('f', 'value'))
+def update_data(n_intervals,  figure, set_click, data, n, q, p, f):
 
     ctx = dash.callback_context
     if ctx.triggered[0]['prop_id'].split('.')[0] == 'set':
-        n_stiff = 50
-        p_stiff = 0.1
-        f_stiff = 0.1
-        nbs_stiff = 3
-        new_data = np.random.choice([-1, 1], size=(n_stiff, n_stiff)), p_stiff, f_stiff, nbs_stiff, n_stiff
+        new_data = np.random.choice([-1, 1], size=(n, n)), p, f, q, n
 
-        y_new = np.sum((np.array(new_data[0]) == 1))
-        t = go.Scatter(x=[1], y=[y_new], line=dict(color="rgb(103, 230, 114)", width=2))
+        y_new = np.sum((np.array(new_data[0])))/(n*n)
+        t = go.Scatter(x=[1], y=[y_new], name='Average opinion', line=dict(color="rgb(103, 230, 114)", width=2))
 
         return (dict(z=[new_data[0]]), [0], new_data[4]), {'data': [t]}, new_data
 
     # heatmap
-    M, p, f, num_of_nbs, n = data
+    M, p, f, q, n = data
     for agent in range(n):
         i, j = np.random.randint(1, n-1, size=2)
         nbs = [M[i][j + 1], M[i][j - 1], M[i+1][j], M[i-1][j]]
@@ -137,16 +137,16 @@ def update_data(n_intervals,  figure, set_click, data):
             if np.random.rand() < f:
                 M[i][j] = -M[i][j]
         else:
-            picked_nbs = np.random.choice(nbs, size=num_of_nbs)
+            picked_nbs = np.random.choice(nbs, size=q)
             if np.all(picked_nbs == picked_nbs[0]):
                 M[i][j] = picked_nbs[0]
 
     # scatter
     y_new = figure['data'][0]['y']
-    y_new.append(np.sum((np.array(data[0]) == 1)))
-    t = go.Scatter(x=list(range(n_intervals + 1)), y=y_new, line=dict(color="rgb(103, 230, 114)", width=2))
+    y_new.append(np.sum((np.array(data[0])))/(n*n))
+    t = go.Scatter(x=list(range(n_intervals + 1)), y=y_new, name='Average opinion', line=dict(color="rgb(103, 230, 114)", width=2))
 
-    return (dict(z=[M]), [0], n), {'data': [t]}, (M, p, f, num_of_nbs, n)
+    return (dict(z=[M]), [0], n), {'data': [t]}, (M, p, f, q, n)
 
 
 @app.callback(Output('interval', 'interval'), Input('start_stop', 'n_clicks'))

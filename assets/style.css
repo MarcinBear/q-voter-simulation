@@ -42,6 +42,7 @@
 #graph_parent {
     margin-top: 10px;
     padding-top: 10px;
+    width: 90vh;
 }
 
 #graph2_parent {
@@ -65,14 +66,14 @@
     gap: 0px;
 }
 
-#size_label {
+#n_label {
     grid-column: 1;
     grid-row: 1;
     width: 100%;
     padding-left: 20px;
 }
 
-#size {
+#n {
     grid-column: 2;
     grid-row: 1;
     text-align: center;
