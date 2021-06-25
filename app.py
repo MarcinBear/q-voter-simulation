@@ -45,7 +45,7 @@ app.layout = html.Div(id="page", children=[
                       html.Div(id='button_parent', children=[
                             html.Button("START / STOP", id='start_stop', n_clicks=0),
                             html.Button("SET", id='set', n_clicks=0)]),
-                      dcc.Store(id='data', data=(start_data, 0, 0.1, 3, n))
+                      dcc.Store(id='data', data=(start_data, 0, 0.1, 3, n, 'random'))
                       ]
                     ),
         html.Div(
@@ -74,10 +74,21 @@ app.layout = html.Div(id="page", children=[
                             ],
                             value='with',
                            ),
+                            dcc.RadioItems(
+                            id='start_state',
+                            options=[
+                                {'label': 'random', 'value': 'random'},
+                                {'label': 'circle', 'value': 'circle'},
+                                {'label': 'checkboard', 'value': 'checkboard'},
+                                {'label': 'solid', 'value': 'solid'}
+                            ],
+                            value='random',
+                            labelStyle={'display': 'inline-block', "margin-left": "5%"}
+                           ),
                       html.Label("q = ", id='q_label', style={'font-size': '20px'}),
                       dcc.Input(
                               id="q", type="number", placeholder=3, value=3,
-                              min=1, max=4, step=1,
+                              min=1, max=8, step=1,
                           ),
                       html.Label("p = ", id='p_label', style={'font-size': '20px'}),
                       dcc.Input(
@@ -107,13 +118,28 @@ app.layout = html.Div(id="page", children=[
               State('n', 'value'),
               State('q', 'value'),
               State('p', 'value'),
-              State('f', 'value'))
-def update_data(n_intervals,  figure, set_click, data, n, q, p, f):
+              State('f', 'value'),
+              State('start_state', 'value'))
+def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state):
 
     ctx = dash.callback_context
     if ctx.triggered[0]['prop_id'].split('.')[0] == 'set':
-        new_data = np.random.choice([-1, 1], size=(n, n)), p, f, q, n
+        if start_state == 'random':
+            state = np.random.choice([-1, 1], size=(n, n))
+        elif start_state == 'circle':
+            state = np.ones((n, n))
+            a, b = int(n / 2), int(n / 2)
+            r = int(n / 2.6)
+            y, x = np.ogrid[-a:n - a, -b:n - b]
+            mask = x * x + y * y <= r * r
+            state[mask] = -1
+        elif start_state == 'checkboard':
+            state = np.indices((n, n)).sum(axis=0) % 2
+            state[state == 0] = -1
+        else:
+            state = np.ones((n, n))
 
+        new_data = state, p, f, q, n, start_state
         y_new = np.sum((np.array(new_data[0])))/(n*n)
         t = go.Scatter(x=[1], y=[y_new], line=dict(color="rgb(103, 230, 114)", width=2))
         l = go.Layout(showlegend=False, autosize=True, title="Average opinion graph")
@@ -121,10 +147,17 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f):
         return (dict(z=[new_data[0]]), [0], new_data[4]), {'data': [t], 'layout': l}, new_data
 
     # heatmap
-    M, p, f, q, n = data
+    M, p, f, q, n, start_state = data
     for agent in range(n):
-        i, j = np.random.randint(1, n-1, size=2)
-        nbs = [M[i][j + 1], M[i][j - 1], M[i+1][j], M[i-1][j]]
+        i, j = np.random.randint(0, n, size=2)
+        nbs = [M[i % n][(j + 1) % n],
+               M[i % n][(j - 1) % n],
+               M[(i+1) % n][j % n],
+               M[(i-1) % n][j % n],
+               M[(i + 1) % n][(j + 1) % n],
+               M[(i - 1) % n][(j - 1) % n],
+               M[(i+1) % n][(j - 1) % n],
+               M[(i-1) % n][(j + 1) % n]]
         if np.random.rand() <= p:
             if np.random.rand() < f:
                 M[i][j] = -M[i][j]
@@ -139,7 +172,7 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f):
     t = go.Scatter(x=list(range(n_intervals + 1)), y=y_new, line=dict(color="rgb(103, 230, 114)", width=2))
     l = go.Layout(showlegend=False, autosize=True, title="Average opinion graph")
 
-    return (dict(z=[M]), [0], n), {'data': [t], 'layout': l}, (M, p, f, q, n)
+    return (dict(z=[M]), [0], n), {'data': [t], 'layout': l}, (M, p, f, q, n, start_state)
 
 
 @app.callback(Output('interval', 'interval'), Input('start_stop', 'n_clicks'))
