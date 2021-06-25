@@ -80,8 +80,8 @@ app.layout = html.Div(id="page", children=[
                           dcc.RadioItems(
                             id='draw',
                             options=[
-                                {'label': '  drawing q neighb. with replacement⠀⠀', 'value': 1},
-                                {'label': '  drawing q neighb. without replacement', 'value': 0},
+                                {'label': '  drawing with replacement⠀⠀', 'value': 1},
+                                {'label': '  drawing without replacement', 'value': 0},
                                     ],
                             value=1,
                           ),
