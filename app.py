@@ -12,16 +12,21 @@ server = app.server
 
 # ---------------- starting parameters ----------------
 n = 25
-speed = 100
+speed = 120
 start_data = np.random.choice([-1, 1], size=(n, n))
+replace = 1  # true
 
 fig = go.Figure()
 fig.add_trace(
     go.Heatmap(z=np.random.choice([-1, 1], (n, n)),
                colorscale=[[0, "rgb(235, 103, 103)"],
                            [0.9, "rgb(103, 230, 114)"],
-                           [1, "rgb(103, 230, 114)"]])
+                           [1, "rgb(103, 230, 114)"]],
+               colorbar=dict(tick0=-1, dtick=2),
+               zmid=0
+               )
             )
+
 
 fig.update_layout(
                   showlegend=False, autosize=True,
@@ -51,7 +56,7 @@ app.layout = html.Div(id="page", children=[
                       html.Div(id='button_parent', children=[
                             html.Button("START / STOP", id='start_stop', n_clicks=0),
                             html.Button("SET", id='set', n_clicks=0)]),
-                      dcc.Store(id='data', data=(start_data, 0, 0.1, 3, n, 'random'))
+                      dcc.Store(id='data', data=(start_data, 0, 0.1, 3, n, 'random', replace))
                       ]
                     ),
         html.Div(
@@ -75,10 +80,10 @@ app.layout = html.Div(id="page", children=[
                           dcc.RadioItems(
                             id='draw',
                             options=[
-                                {'label': 'drawing with repetitions⠀⠀', 'value': 'with'},
-                                {'label': 'drawing without repetitions', 'value': 'without'},
+                                {'label': '  drawing q neighb. with replacement⠀⠀', 'value': 1},
+                                {'label': '  drawing q neighb. without replacement', 'value': 0},
                                     ],
-                            value='with',
+                            value=1,
                           ),
                           dcc.RadioItems(
                             id='start_state',
@@ -125,9 +130,9 @@ app.layout = html.Div(id="page", children=[
               State('q', 'value'),
               State('p', 'value'),
               State('f', 'value'),
-              State('start_state', 'value'))
-def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state):
-
+              State('start_state', 'value'),
+              State('draw', 'value'))
+def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state, with_replace):
     ctx = dash.callback_context
     if ctx.triggered[0]['prop_id'].split('.')[0] == 'set':
         if start_state == 'random':
@@ -145,7 +150,7 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state):
         else:
             state = np.ones((n, n))
 
-        new_data = state, p, f, q, n, start_state
+        new_data = state, p, f, q, n, start_state, with_replace
         y_new = np.sum((np.array(new_data[0])))/(n*n)
         t = go.Scatter(x=[1], y=[y_new], line=dict(color="rgb(103, 230, 114)", width=2))
         l = go.Layout(showlegend=False, autosize=True, title="Average opinion graph", xaxis_title={'text': "MCS"})
@@ -153,7 +158,7 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state):
         return (dict(z=[new_data[0]]), [0], new_data[4]), {'data': [t], 'layout': l}, new_data
 
     # heatmap
-    M, p, f, q, n, start_state = data
+    M, p, f, q, n, start_state, with_replace = data
     for agent in range(50):
         i, j = np.random.randint(0, n, size=2)
         nbs = [M[i % n][(j + 1) % n],
@@ -168,7 +173,7 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state):
             if np.random.rand() < f:
                 M[i][j] = -M[i][j]
         else:
-            picked_nbs = np.random.choice(nbs, size=q)
+            picked_nbs = np.random.choice(nbs, size=q, replace=with_replace)
             if np.all(picked_nbs == picked_nbs[0]):
                 M[i][j] = picked_nbs[0]
 
@@ -178,7 +183,7 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state):
     t = go.Scatter(x=list(range(n_intervals + 1)), y=y_new, line=dict(color="rgb(103, 230, 114)", width=2))
     l = go.Layout(showlegend=False, autosize=True, title="Average opinion graph", xaxis_title={'text': "MCS"})
 
-    return (dict(z=[M]), [0], n), {'data': [t], 'layout': l}, (M, p, f, q, n, start_state)
+    return (dict(z=[M]), [0], n), {'data': [t], 'layout': l}, (M, p, f, q, n, start_state, with_replace)
 
 
 @app.callback(Output('interval', 'interval'), Input('start_stop', 'n_clicks'))
