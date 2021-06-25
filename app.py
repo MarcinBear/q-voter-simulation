@@ -21,7 +21,7 @@ fig.add_trace(go.Heatmap(z=np.random.choice([-1, 1], (n, n)),
                                      [1, "rgb(103, 230, 114)"]]))
 
 fig.update_layout(
-                  showlegend=False, autosize=False, width=700, height=700,
+                  showlegend=False, autosize=True,
                   title={
                             'text': "q-voter model simulation",
                             'y': 0.95,
@@ -32,17 +32,8 @@ fig.update_layout(
                   )
 
 fig2 = go.Figure()
-fig2.add_trace(go.Scatter(x=[0], y=[np.sum(start_data)/(n*n)], name='Average opinion', line=dict(color="rgb(103, 230, 114)", width=2)))
-fig2.update_layout(
-                  autosize=False, width=900, height=400,  xaxis_title="time",
-                  title={
-                            'text': " ",
-                            'y': 0.95,
-                            'x': 0.5,
-                            'font': {'size': 40},
-                            'xanchor': 'center',
-                            'yanchor': 'top'},
-                  )
+fig2.add_trace(go.Scatter(x=[0], y=[np.sum(start_data)/(n*n)], line=dict(color="rgb(103, 230, 114)", width=2)))
+fig2.update_layout(showlegend=True, autosize=True, title="Average opinion graph")
 
 app.layout = html.Div(id="page", children=[
         dcc.Store(id='value_T'),
@@ -124,9 +115,10 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f):
         new_data = np.random.choice([-1, 1], size=(n, n)), p, f, q, n
 
         y_new = np.sum((np.array(new_data[0])))/(n*n)
-        t = go.Scatter(x=[1], y=[y_new], name='Average opinion', line=dict(color="rgb(103, 230, 114)", width=2))
+        t = go.Scatter(x=[1], y=[y_new], line=dict(color="rgb(103, 230, 114)", width=2))
+        l = go.Layout(showlegend=False, autosize=True, title="Average opinion graph")
 
-        return (dict(z=[new_data[0]]), [0], new_data[4]), {'data': [t]}, new_data
+        return (dict(z=[new_data[0]]), [0], new_data[4]), {'data': [t], 'layout': l}, new_data
 
     # heatmap
     M, p, f, q, n = data
@@ -144,9 +136,10 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f):
     # scatter
     y_new = figure['data'][0]['y']
     y_new.append(np.sum((np.array(data[0])))/(n*n))
-    t = go.Scatter(x=list(range(n_intervals + 1)), y=y_new, name='Average opinion', line=dict(color="rgb(103, 230, 114)", width=2))
+    t = go.Scatter(x=list(range(n_intervals + 1)), y=y_new, line=dict(color="rgb(103, 230, 114)", width=2))
+    l = go.Layout(showlegend=False, autosize=True, title="Average opinion graph")
 
-    return (dict(z=[M]), [0], n), {'data': [t]}, (M, p, f, q, n)
+    return (dict(z=[M]), [0], n), {'data': [t], 'layout': l}, (M, p, f, q, n)
 
 
 @app.callback(Output('interval', 'interval'), Input('start_stop', 'n_clicks'))

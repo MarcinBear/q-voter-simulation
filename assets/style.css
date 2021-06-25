@@ -2,6 +2,8 @@
     display: flex;
     column-gap: no;
     margin: 50px;
+    /*border: 4px dashed pink;*/
+    height: 85vh;
 }
 
 #left_col {
@@ -9,6 +11,7 @@
     border: 3px solid #ededeb;
     margin: 0px;
     width: 45%;
+    height: 100%;
 }
 
 #right_col {
@@ -16,6 +19,7 @@
     margin: 0px;
     display: grid;
     border: 3px solid #ededeb;
+    height: 100%;
 }
 
 #button_parent {
@@ -42,8 +46,15 @@
 #graph_parent {
     margin-top: 10px;
     padding-top: 10px;
-    width: 90vh;
+    width: 90%;
+    height: 100%;
 }
+
+#live-graph {
+   /*border: 3px solid red;*/
+   height: 95%;
+}
+
 
 #graph2_parent {
     margin-top: 10px;
@@ -53,6 +64,7 @@
     grid-column-end: 2;
     padding-bottom: 0px;
     margin-bottom: 0px;
+    width: 90%;
 }
 
 #input_parent {
@@ -64,6 +76,7 @@
     grid-row-end: 10;
     display: grid;
     gap: 0px;
+    /*border: 3px solid #ededeb;*/
 }
 
 #n_label {
