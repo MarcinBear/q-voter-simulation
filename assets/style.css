@@ -151,9 +151,20 @@
 
 #bottom_label {
     grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-end: 10;
     grid-row-start: 5;
+    grid-row-end: 8;
+}
+
+#footer {
+    grid-column-start: 1;
+    grid-column-end: 10;
+    grid-row-start: 8;
     grid-row-end: 9;
+    font-style: italic;
+    background: #ededeb;
+    font-family: Times, Times New Roman, serif;
+    padding-top: 1%;
 }
 
 #model {

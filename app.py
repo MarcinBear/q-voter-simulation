@@ -12,9 +12,28 @@ server = app.server
 
 # ---------------- starting parameters ----------------
 n = 25
-speed = 120
+speed = 120  # TODO optimize speed
 start_data = np.random.choice([-1, 1], size=(n, n))
 replace = 1  # true
+
+
+def independence(M, i , j , f, nbs, q, with_replace):
+    if np.random.rand() < f:
+        return -M[i][j]
+    else:
+        return M[i][j]
+
+
+def anticonformity(M, i, j, f, nbs, q, with_replace):
+    picked_nbs = np.random.choice(nbs, size=q, replace=with_replace)
+    if np.all(picked_nbs == picked_nbs[0]):
+        return -picked_nbs[0]
+    else:
+        return M[i][j]
+
+
+models = {'independence': independence, 'anticonformity': anticonformity}
+
 
 fig = go.Figure()
 fig.add_trace(
@@ -56,7 +75,7 @@ app.layout = html.Div(id="page", children=[
                       html.Div(id='button_parent', children=[
                             html.Button("START / STOP", id='start_stop', n_clicks=0),
                             html.Button("SET", id='set', n_clicks=0)]),
-                      dcc.Store(id='data', data=(start_data, 0, 0.1, 3, n, 'random', replace))
+                      dcc.Store(id='data', data=(start_data, 0, 0.1, 3, n, 'random', replace, 'independence'))
                       ]
                     ),
         html.Div(
@@ -72,10 +91,10 @@ app.layout = html.Div(id="page", children=[
                           dcc.RadioItems(
                             id='model',
                             options=[
-                                {'label': 'conformity + independence', 'value': 'c_i'},
-                                {'label': 'conformity + anticonformity', 'value': 'c_a'},
+                                {'label': 'conformity + independence', 'value': 'independence'},
+                                {'label': 'conformity + anticonformity', 'value': 'anticonformity'},
                                     ],
-                            value='c_i',
+                            value='independence',
                           ),
                           dcc.RadioItems(
                             id='draw',
@@ -111,7 +130,8 @@ app.layout = html.Div(id="page", children=[
                               id="f", type="number", placeholder=0.5, value=0.5,
                               min=0.01, max=1, step=0.01,
                           ),
-                          html.Label(" ", id='bottom_label', style={'font-size': '20px'}),
+                          html.Label(" ", id='bottom_label'),
+                          html.Label("•  ⠀app made by Marcin Miśkiewicz, 2021⠀  •", id='footer'),
                         ])
                       ]
                     )
@@ -131,8 +151,9 @@ app.layout = html.Div(id="page", children=[
               State('p', 'value'),
               State('f', 'value'),
               State('start_state', 'value'),
-              State('draw', 'value'))
-def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state, with_replace):
+              State('draw', 'value'),
+              State('model', 'value'))
+def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state, with_replace, model):
     ctx = dash.callback_context
     if ctx.triggered[0]['prop_id'].split('.')[0] == 'set':
         if start_state == 'random':
@@ -150,7 +171,7 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state, 
         else:
             state = np.ones((n, n))
 
-        new_data = state, p, f, q, n, start_state, with_replace
+        new_data = state, p, f, q, n, start_state, with_replace, model
         y_new = np.sum((np.array(new_data[0])))/(n*n)
         t = go.Scatter(x=[1], y=[y_new], line=dict(color="rgb(103, 230, 114)", width=2))
         l = go.Layout(showlegend=False, autosize=True, title="Average opinion graph", xaxis_title={'text': "MCS"})
@@ -158,7 +179,7 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state, 
         return (dict(z=[new_data[0]]), [0], new_data[4]), {'data': [t], 'layout': l}, new_data
 
     # heatmap
-    M, p, f, q, n, start_state, with_replace = data
+    M, p, f, q, n, start_state, with_replace, model = data
     for agent in range(50):
         i, j = np.random.randint(0, n, size=2)
         nbs = [M[i % n][(j + 1) % n],
@@ -170,8 +191,8 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state, 
                M[(i+1) % n][(j - 1) % n],
                M[(i-1) % n][(j + 1) % n]]
         if np.random.rand() <= p:
-            if np.random.rand() < f:
-                M[i][j] = -M[i][j]
+            M[i][j] = models[model](M, i, j, f, nbs, q, with_replace)
+
         else:
             picked_nbs = np.random.choice(nbs, size=q, replace=with_replace)
             if np.all(picked_nbs == picked_nbs[0]):
@@ -183,7 +204,7 @@ def update_data(n_intervals,  figure, set_click, data, n, q, p, f, start_state, 
     t = go.Scatter(x=list(range(n_intervals + 1)), y=y_new, line=dict(color="rgb(103, 230, 114)", width=2))
     l = go.Layout(showlegend=False, autosize=True, title="Average opinion graph", xaxis_title={'text': "MCS"})
 
-    return (dict(z=[M]), [0], n), {'data': [t], 'layout': l}, (M, p, f, q, n, start_state, with_replace)
+    return (dict(z=[M]), [0], n), {'data': [t], 'layout': l}, (M, p, f, q, n, start_state, with_replace, model)
 
 
 @app.callback(Output('interval', 'interval'), Input('start_stop', 'n_clicks'))
