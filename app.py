@@ -11,13 +11,17 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets, update_titl
 server = app.server
 
 # ---------------- starting parameters ----------------
-n = 25
-speed = 120  # TODO optimize speed
-start_data = np.random.choice([-1, 1], size=(n, n))
-replace = 1  # true
+n_start = 25
+speed = 110  # TODO optimize speed
+start_data = np.random.choice([-1, 1], size=(n_start, n_start))
+replace_start = 1  # true
+q_start = 3
+f_start = 0.5
+p_start = 0.5
+# -----------------------------------------------------
 
 
-def independence(M, i , j , f, nbs, q, with_replace):
+def independence(M, i, j, f, nbs, q, with_replace):
     if np.random.rand() < f:
         return -M[i][j]
     else:
@@ -37,7 +41,7 @@ models = {'independence': independence, 'anticonformity': anticonformity}
 
 fig = go.Figure()
 fig.add_trace(
-    go.Heatmap(z=np.random.choice([-1, 1], (n, n)),
+    go.Heatmap(z=np.random.choice([-1, 1], (n_start, n_start)),
                colorscale=[[0, "rgb(235, 103, 103)"],
                            [0.9, "rgb(103, 230, 114)"],
                            [1, "rgb(103, 230, 114)"]],
@@ -59,7 +63,7 @@ fig.update_layout(
 
 fig2 = go.Figure()
 fig2.add_trace(
-    go.Scatter(x=[0], y=[np.sum(start_data)/(n*n)],
+    go.Scatter(x=[0], y=[np.sum(start_data)/(n_start*n_start)],
                line=dict(color="rgb(103, 230, 114)", width=2))
               )
 
@@ -75,7 +79,7 @@ app.layout = html.Div(id="page", children=[
                       html.Div(id='button_parent', children=[
                             html.Button("START / STOP", id='start_stop', n_clicks=0),
                             html.Button("SET", id='set', n_clicks=0)]),
-                      dcc.Store(id='data', data=(start_data, 0, 0.1, 3, n, 'random', replace, 'independence'))
+                      dcc.Store(id='data', data=(start_data, p_start, f_start, q_start, n_start, 'random', replace_start, 'independence'))
                       ]
                     ),
         html.Div(
@@ -83,7 +87,7 @@ app.layout = html.Div(id="page", children=[
             children=[html.Div(id='graph2_parent', children=[
                       dcc.Graph(figure=fig2, id='live-graph2')]),
                       html.Div(id="input_parent", children=[
-                          html.Label("N = ", id='n_label', style={'font-size': '20px'}),
+                          html.Label("N = ", id='n_label', style={'font-size': '20px'}, title='system size'),
                           dcc.Input(
                               id="n", type="number", placeholder=25, value=25,
                               min=5, max=1000, step=1,
