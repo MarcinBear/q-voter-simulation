@@ -90,7 +90,7 @@ app.layout = html.Div(id="page", children=[
                           html.Label("N = ", id='n_label', style={'font-size': '20px'}, title='system size'),
                           dcc.Input(
                               id="n", type="number", placeholder=25, value=25,
-                              min=5, max=1000, step=1,
+                              min=5, max=100, step=1,
                           ),
                           dcc.RadioItems(
                             id='model',
