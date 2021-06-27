@@ -56,7 +56,7 @@ fig.update_layout(
                   title={'text': "q-voter model simulation",
                          'y': 0.95,
                          'x': 0.5,
-                         'font': {'size': 40},
+                         'font': {'size': 35},
                          'xanchor': 'center',
                          'yanchor': 'top'},
                   )
