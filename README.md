@@ -1,4 +1,4 @@
-# q-voter model simulation
+# q-voter model simulation 🟩🟥🟩🟥
 ---
 
 ### Dash app designed for simple simulation and visualization of the q-voter model on a square network.
@@ -25,3 +25,16 @@ The difference in the opinion dynamics algorithms is presented in the diagrams b
 
 ![diagram2_error](images/diagram2.png "Diagram 2")
 <p align="center">anticonformity + conformity<p>
+
+ ### Parameters
+  
+🟩 `N` - system size
+🟩 `p` - probability of a non-conforming behaviour of an agent
+🟩 `q` - number of neighbours to check (max 8: 4 on the sides and 4 in the corners)
+🟩 `f` - probability of independence (it matters only when the selected model is with independence)
+🟩 `radio buttons: drawing w/o replacement` - decides whether randomly selected neighbors can be repeated
+🟩 `radio buttons: random/circle/solid/checkboard` - initial state of the system
+  
+ After setting the parameters, click the `SET` button and then run the simulation by clicking `RUN\STOP`!
+ 
+ ---
