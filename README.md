@@ -6,7 +6,4 @@ The user can see in real time how the system is evolving and how the average opi
 
  > ❯❯❯❯❯  **App deployed on Heroku: https://q-voter.herokuapp.com/**
 
-
-![diagram_1_error](Dok1.png "Diagram 1")
-
 ![diagram_2_error](Dok2.png "Diagram 2")
