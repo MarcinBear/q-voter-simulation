@@ -9,7 +9,7 @@ User can see in real time how the system is evolving and how the average opinion
 ---
 ### User manual
 
-
+![app_screenshot_error](images/app.png "app screenshot")
 
 ![diagram1_error](images/diagram1.png "Diagram 1")
 
