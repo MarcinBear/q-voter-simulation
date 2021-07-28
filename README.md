@@ -1,3 +1,3 @@
-# q-voter-simulation
+# q-voter model simulation
 
-https://q-voter.herokuapp.com/
+<center>https://q-voter.herokuapp.com/</center>
