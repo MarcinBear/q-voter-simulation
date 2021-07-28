@@ -8,3 +8,5 @@ The user can see in real time how the system is evolving and how the average opi
 
 
 ![diagram_1_error](Dok1.png "Diagram 1")
+
+![diagram_2_error](Dok2.png "Diagram 2")
