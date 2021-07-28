@@ -28,6 +28,8 @@ The difference in the opinion dynamics algorithms is presented in the diagrams b
 ![diagram2_error](images/diagram2.png "Diagram 2")
 <p align="center">anticonformity + conformity<p>
 
+---
+
  ### Parameters
   
 🟩 `N` - system size
