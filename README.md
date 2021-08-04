@@ -4,7 +4,7 @@
 ### Dash app designed for simple simulation and visualization of the q-voter model on a square network.
 User can see in real time how the system is evolving and how the average opinion is changing.
 
-❯❯❯❯❯  **App deployed on Heroku: https://q-voter.herokuapp.com/** *(Note: it may take a while to wake up the app)*
+❯❯❯❯❯  **App deployed on Heroku: https://q-voter.herokuapp.com/** *(Note: it may take a while for the app to wake up)*
 
 ---
 
